@@ -1,8 +1,8 @@
 # ПРОВЕРКА НА СПЛОШНУЮ ТЕКСТУРУ
+from PIL import Image
 
-def textureSolidColor(args):
-    from PIL import Image
 
+def texture_solid_color(args):
     img = Image.open(args)  # Проверить jpg/png
     new_img = Image.new('RGB', img.size, (255, 255, 255))
     new_img.paste(img, (0, 0), img)

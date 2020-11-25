@@ -1,6 +1,6 @@
 # СЧЕТЧИК ОБЪЕКТОВ В .obj ФАЙЛЕ
 
-def objObjectsCounter(args):
+def obj_objects_counter(args):
     objFile = open(args, 'r')
     objCount = 0
 

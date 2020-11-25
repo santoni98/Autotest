@@ -1,8 +1,8 @@
 # ПРОЦЕНТ ЗАПОЛНЕННОСТИ РАЗВЕРТКИ(ТЕКСТУРЫ)
-
 from PIL import Image
 
-def textureFill(args):
+
+def texture_fill(args):
     img = Image.open(args).convert("RGBA")  # Проверить jpg/png
     new_img = Image.new('RGB', img.size, (255, 255, 255))
     new_img.paste(img, (0, 0), img)

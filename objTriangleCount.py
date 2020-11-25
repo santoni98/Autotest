@@ -1,9 +1,9 @@
 # СЧЕТЧИК ТРЕУГОЛЬНИКОВ
-def objTriangleCount(args):
-    objFile = open(args, 'r')
+def obj_triangle_count(args):
+    obj_file = open(args, 'r')
     triangles = 0  # Треугольники
 
-    for line in objFile:
+    for line in obj_file:
         split = line.split()
         if not len(split):
             continue

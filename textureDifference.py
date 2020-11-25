@@ -3,7 +3,7 @@
 from PIL import Image
 
 
-def textureDifference(arg1, arg2):
+def texture_difference(arg1, arg2):
     # 1
     img1 = Image.open("choker.png")  # Проверить jpg/png
 

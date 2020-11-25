@@ -1,8 +1,8 @@
 # ОСНОВНАЯ ПРОВЕРКА ТЕКСТУРЫ
-
 from PIL import Image
 
-def textureMainCheck(args):
+
+def texture_main_check(args):
     image = Image.open(args)  # Открываем изображение
     (width, height) = image.size  # Определяем ширину и высоту
 
