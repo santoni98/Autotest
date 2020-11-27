@@ -1,0 +1,62 @@
+[
+  {
+    "num": 1,
+    "obj_name": "wall_simple",
+    "texture_quantity": 3,
+    "triangles": 100
+  },
+  {
+    "num": 2,
+    "obj_name": "wall_lux_angle",
+    "texture_quantity": 2,
+    "triangles": 150
+  },
+  {
+    "num": 3,
+    "obj_name": "wall_simple_window",
+    "texture_quantity": 3,
+    "triangles": 150
+  },
+  {
+    "num": 4,
+    "obj_name": "wall_lux_window",
+    "texture_quantity": 2,
+    "triangles": 300
+  },
+  {
+    "num": 5,
+    "obj_name": "roof_simple",
+    "texture_quantity": 3,
+    "triangles": 200
+  },
+  {
+    "num": 6,
+    "obj_name": "roof_lux",
+    "texture_quantity": 2,
+    "triangles": 300
+  },
+  {
+    "num": 7,
+    "obj_name": "roof_booth",
+    "texture_quantity": 3,
+    "triangles": 200
+  },
+  {
+    "num": 8,
+    "obj_name": "window_simple",
+    "texture_quantity": 1,
+    "triangles": 150
+  },
+  {
+    "num": 9,
+    "obj_name": "window_mid",
+    "texture_quantity": 1,
+    "triangles": 200
+  },
+  {
+    "num": 10,
+    "obj_name": "window_lux",
+    "texture_quantity": 1,
+    "triangles": 300
+  }
+]
