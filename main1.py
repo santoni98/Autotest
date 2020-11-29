@@ -17,7 +17,7 @@ def obj(arg1, arg2):
     points = 0
     if obj_objects_counter(arg1) == 1:
         if temp >= constant_tris1 * 0.1:
-            if temp < constant_tris1 * 2.5:
+            if temp < constant_tris1 * 1.75:
                 points += 1
                 if temp > constant_tris1:
                     points += 1
@@ -29,28 +29,23 @@ def texture_exist(folder_num, object_name, texture_quantity):
     e = True
     for i in range(texture_quantity):
         i += 1
-        path = str('zip/' + str(folder_num) + '/' + object_name + '_tex' + str(i) + '.png')
+        path = str('zip1/' + str(folder_num) + '/' + object_name + '_tex' + str(i) + '.png')
         if not os.path.exists(path):
             e = False
     return e
 
 
-# ************Допиши эту штуку************
-def textures_valid(folder_num, object_name, texture_quantity):
-    path1 = str('zip/' + str(folder_num) + '/' + object_name + '_tex1.png')
-    path2 = str('zip/' + str(folder_num) + '/' + object_name + '_tex2.png')
-    path3 = str('zip/' + str(folder_num) + '/' + object_name + '_tex3.png')
-
-    print(path1)
-    print(path2)
-    print(path3)
+# Проверка на схожесть текстур в папке
+def textures_valid(dir_path, object_name, texture_quantity):
+    path1 = str(dir_path + '/' + object_name + '_tex1.png')
+    path2 = str(dir_path + '/' + object_name + '_tex2.png')
+    path3 = str(dir_path + '/' + object_name + '_tex3.png')
 
     check = True
-    if texture_quantity > 1:
+    if texture_quantity == 2:
         check = texture_difference(path1, path2)
-        if texture_quantity < 4:
-            if check:
-                check = texture_difference(path1, path3) and texture_difference(path2, path3)
+    if texture_quantity == 3:
+        check = texture_difference(path1, path3) and texture_difference(path2, path3)
     return check
 
 
@@ -59,7 +54,7 @@ def get_texture_points(folder_num, object_name, texture_quantity):
     temp = 10
     for i in range(texture_quantity):
         i += 1
-        path = str('zip/' + str(folder_num) + '/' + object_name + '_tex' + str(i) + '.png')
+        path = str('zip1/' + str(folder_num) + '/' + object_name + '_tex' + str(i) + '.png')
         if temp > points_texture_count(path):
             temp = points_texture_count(path)
     temp *= texture_quantity
@@ -82,7 +77,7 @@ def main():
     # обернуть в try except(ошибка при выдаче левого файла как zip)
     if os.path.exists('models.zip'):
         with zipfile.ZipFile("models.zip", "r") as zip_ref:
-            zip_ref.extractall("zip")
+            zip_ref.extractall("zip1")
 
     with open("unit1.json", "r") as myfile:
         data = json.load(myfile)
@@ -90,7 +85,7 @@ def main():
     score = 0
     for line in data:
         num = line["num"]
-        dir_path = f'zip/{line["num"]}'
+        dir_path = f'zip1/{line["num"]}'
         obj_name = line["obj_name"]
         texture_quantity = line["texture_quantity"]
         triangles = line["triangles"]
@@ -99,7 +94,8 @@ def main():
             continue
         score += obj(model_path, triangles)
         if texture_exist(num, obj_name, texture_quantity):
-            score += get_texture_points(num, obj_name, texture_quantity)
+            if textures_valid(dir_path, obj_name, texture_quantity):
+                score += get_texture_points(num, obj_name, texture_quantity)
 
     # shutil.rmtree("zip")
     # Вывод Баллов (Unit 1)

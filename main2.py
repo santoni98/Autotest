@@ -5,6 +5,7 @@ import zipfile
 from objObjectsCounter import obj_objects_counter
 from objScale import obj_scale
 from objTriangleCount import obj_triangle_count
+from textureDifference import texture_difference
 from textureFill import texture_fill
 from textureMainCheck import texture_main_check
 from textureSolidColor import texture_solid_color
@@ -79,7 +80,7 @@ def obj2(arg1, arg2):
     points = 0
     if obj_objects_counter(arg1) == 1:
         if temp >= constant_tris1 * 0.1:
-            if temp < constant_tris1 * 1.75:
+            if temp < constant_tris1 * 2.5:
                 points += 1
                 if temp > constant_tris1:
                     points += 1
@@ -110,6 +111,20 @@ def points_texture_count2(arg):
     return points
 
 
+# Проверка на схожесть текстур в папке
+def textures_valid2(dir_path, object_name, texture_quantity):
+    path1 = str(dir_path + '/' + object_name + '_tex1.png')
+    path2 = str(dir_path + '/' + object_name + '_tex2.png')
+    path3 = str(dir_path + '/' + object_name + '_tex3.png')
+
+    check = True
+    if texture_quantity == 2:
+        check = texture_difference(path1, path2)
+    if texture_quantity == 3:
+        check = texture_difference(path1, path3) and texture_difference(path2, path3)
+    return check
+
+
 def main2():
     # get zip archive
     # обернуть в try except(ошибка при выдаче левого файла как zip)
@@ -137,14 +152,16 @@ def main2():
             helper_for_lengths += 3
             score += obj2_1(model_path, triangles)
             if texture_exist(num, obj_name, texture_quantity):
-                score += get_texture_points2_1(num, obj_name, texture_quantity)
+                if textures_valid2(dir_path, obj_name, texture_quantity):
+                    score += get_texture_points2_1(num, obj_name, texture_quantity)
         if helper_for_lengths == 3:
             score += length_roads_equally2_1()
 
         if num > 3:
             score += obj2(model_path, triangles)
             if texture_exist(num, obj_name, texture_quantity):
-                score += get_texture_points2(num, obj_name, texture_quantity)
+                if textures_valid2(dir_path, obj_name, texture_quantity):
+                    score += get_texture_points2(num, obj_name, texture_quantity)
 
     # shutil.rmtree("zip")
     # Вывод Баллов (Unit 2)
