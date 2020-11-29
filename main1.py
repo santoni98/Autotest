@@ -1,64 +1,12 @@
-import os
-import shutil
-import zipfile
 import json
-from objObjectsCounter import obj_objects_counter
-from objTriangleCount import obj_triangle_count
-from textureDifference import texture_difference
+import os
+import zipfile
+from typing import List, Dict, Any
+
 from textureFill import texture_fill
 from textureMainCheck import texture_main_check
 from textureSolidColor import texture_solid_color
-
-
-# obj Unit 1
-def obj(arg1, arg2):
-    temp = obj_triangle_count(arg1)
-    constant_tris1 = arg2
-    points = 0
-    if obj_objects_counter(arg1) == 1:
-        if temp >= constant_tris1 * 0.1:
-            if temp < constant_tris1 * 1.75:
-                points += 1
-                if temp > constant_tris1:
-                    points += 1
-    return points
-
-
-# Проверка наличия всех текстур в папке. Unit 1
-def texture_exist(folder_num, object_name, texture_quantity):
-    e = True
-    for i in range(texture_quantity):
-        i += 1
-        path = str('zip1/' + str(folder_num) + '/' + object_name + '_tex' + str(i) + '.png')
-        if not os.path.exists(path):
-            e = False
-    return e
-
-
-# Проверка на схожесть текстур в папке
-def textures_valid(dir_path, object_name, texture_quantity):
-    path1 = str(dir_path + '/' + object_name + '_tex1.png')
-    path2 = str(dir_path + '/' + object_name + '_tex2.png')
-    path3 = str(dir_path + '/' + object_name + '_tex3.png')
-
-    check = True
-    if texture_quantity == 2:
-        check = texture_difference(path1, path2)
-    if texture_quantity == 3:
-        check = texture_difference(path1, path3) and texture_difference(path2, path3)
-    return check
-
-
-# Получить баллы за все текстуры в папке Unit 1
-def get_texture_points(folder_num, object_name, texture_quantity):
-    temp = 10
-    for i in range(texture_quantity):
-        i += 1
-        path = str('zip1/' + str(folder_num) + '/' + object_name + '_tex' + str(i) + '.png')
-        if temp > points_texture_count(path):
-            temp = points_texture_count(path)
-    temp *= texture_quantity
-    return temp
+from utils import textures_valid, obj, get_texture_points, texture_exist
 
 
 # Получить баллы за одну текстуру Unit 1
@@ -74,167 +22,40 @@ def points_texture_count(arg):
 
 def main():
     # get zip archive
+    base_dir = 'zip1'
     # обернуть в try except(ошибка при выдаче левого файла как zip)
     if os.path.exists('models.zip'):
         with zipfile.ZipFile("models.zip", "r") as zip_ref:
-            zip_ref.extractall("zip1")
+            zip_ref.extractall(base_dir)
 
     with open("unit1.json", "r") as myfile:
-        data = json.load(myfile)
+        data: List[Dict[str, Any]] = json.load(myfile)
 
     score = 0
     for line in data:
         num = line["num"]
-        dir_path = f'zip1/{line["num"]}'
+        dir_path = f'{base_dir}/{num}'
         obj_name = line["obj_name"]
         texture_quantity = line["texture_quantity"]
         triangles = line["triangles"]
         model_path = f'{dir_path}/{obj_name}.obj'
         if not os.path.exists(model_path):
             continue
-        score += obj(model_path, triangles)
-        if texture_exist(num, obj_name, texture_quantity):
+        score += obj(model_path, triangles, 1.75)
+        if texture_exist(base_dir, num, obj_name, texture_quantity):
             if textures_valid(dir_path, obj_name, texture_quantity):
-                score += get_texture_points(num, obj_name, texture_quantity)
+                score += get_texture_points(base_dir, num, obj_name, texture_quantity, points_texture_count)
 
     # shutil.rmtree("zip")
     # Вывод Баллов (Unit 1)
-    if score < 0:
-        score = 0
-    if score > 40:
-        score = 40
+    score = max(0, score)
+    score = min(score, 40)
     score /= 100
     print(score)
 
 
 if __name__ == '__main__':
     main()
-
-    # folder_num = data[0]
-    # object_name = data[1]
-    # texture_quantity = data[2]
-
-    # score = 0  # Баллы
-    #
-    # # Сделать проверку содержимого архива
-    # if os.path.exists('zip/1/wall_simple.obj'):
-    #     if obj_objects_counter('zip/1/wall_simple.obj') == 1:
-    #         score += obj('zip/1/wall_simple.obj', 100)
-    #         # Проверка текстуры
-    #         # 1 2 3
-    #         if texture_exist(folder_num["folder_num1"], object_name["object_name1"],
-    #                          texture_quantity["texture_quantity1"]):
-    #             score += get_texture_points(folder_num["folder_num1"],
-    #                                         object_name["object_name1"],
-    #                                         texture_quantity["texture_quantity1"])
-    # print(score)
-    #
-    # if os.path.exists('zip/2/wall_lux.obj'):
-    #     if obj_objects_counter('zip/2/wall_lux.obj') == 1:
-    #         score += obj('zip/2/wall_lux.obj', 150)
-    #         # Проверка текстуры
-    #         # 1 2
-    #         if texture_exist(folder_num["folder_num2"], object_name["object_name2"],
-    #                          texture_quantity["texture_quantity2"]):
-    #             score += get_texture_points(folder_num["folder_num2"],
-    #                                         object_name["object_name2"],
-    #                                         texture_quantity["texture_quantity2"])
-    # print(score)
-    #
-    # if os.path.exists('zip/3/wall_simple_window.obj'):
-    #     if obj_objects_counter('zip/3/wall_simple_window.obj') == 1:
-    #         score += obj('zip/3/wall_simple_window.obj', 150)
-    #         # Проверка текстуры
-    #         # 1 2 3
-    #         if texture_exist(folder_num["folder_num3"], object_name["object_name3"],
-    #                          texture_quantity["texture_quantity3"]):
-    #             score += get_texture_points(folder_num["folder_num3"],
-    #                                         object_name["object_name3"],
-    #                                         texture_quantity["texture_quantity3"])
-    # print(score)
-    #
-    # if os.path.exists('zip/4/wall_lux_window.obj'):
-    #     if obj_objects_counter('zip/4/wall_lux_window.obj') == 1:
-    #         score += obj('zip/4/wall_lux_window.obj', 300)
-    #         # Проверка текстуры
-    #         # 1 2
-    #         if texture_exist(folder_num["folder_num4"], object_name["object_name4"],
-    #                          texture_quantity["texture_quantity4"]):
-    #             score += get_texture_points(folder_num["folder_num4"],
-    #                                         object_name["object_name4"],
-    #                                         texture_quantity["texture_quantity4"])
-    # print(score)
-    #
-    # if os.path.exists('zip/5/roof_simple.obj'):
-    #     if obj_objects_counter('zip/5/roof_simple.obj') == 1:
-    #         score += obj('zip/5/roof_simple.obj', 200)
-    #         # Проверка текстуры
-    #         # 1
-    #         if texture_exist(folder_num["folder_num5"], object_name["object_name5"],
-    #                          texture_quantity["texture_quantity5"]):
-    #             score += get_texture_points(folder_num["folder_num5"],
-    #                                         object_name["object_name5"],
-    #                                         texture_quantity["texture_quantity5"])
-    # print(score)
-    #
-    # if os.path.exists('zip/6/roof_lux.obj'):
-    #     if obj_objects_counter('zip/6/roof_lux.obj') == 1:
-    #         score += obj('zip/6/roof_lux.obj', 300)
-    #         # Проверка текстуры
-    #         # 1
-    #         if texture_exist(folder_num["folder_num6"], object_name["object_name6"],
-    #                          texture_quantity["texture_quantity6"]):
-    #             score += get_texture_points(folder_num["folder_num6"],
-    #                                         object_name["object_name6"],
-    #                                         texture_quantity["texture_quantity6"])
-    # print(score)
-    #
-    # if os.path.exists('zip/7/roof_booth.obj'):
-    #     if obj_objects_counter('zip/7/roof_booth.obj') == 1:
-    #         score += obj('zip/7/roof_booth.obj', 200)
-    #         # Проверка текстуры
-    #         # 1 2 3
-    #         if texture_exist(folder_num["folder_num7"], object_name["object_name7"],
-    #                          texture_quantity["texture_quantity7"]):
-    #             score += get_texture_points(folder_num["folder_num7"],
-    #                                         object_name["object_name7"],
-    #                                         texture_quantity["texture_quantity7"])
-    # print(score)
-    #
-    # if os.path.exists('zip/8/window_simple.obj'):
-    #     if obj_objects_counter('zip/8/window_simple.obj') == 1:
-    #         score += obj('zip/8/window_simple.obj', 150)
-    #         # Проверка текстуры
-    #         # 1
-    #         if texture_exist(folder_num["folder_num8"], object_name["object_name8"],
-    #                          texture_quantity["texture_quantity8"]):
-    #             score += get_texture_points(folder_num["folder_num8"],
-    #                                         object_name["object_name8"],
-    #                                         texture_quantity["texture_quantity8"])
-    # print(score)
-    #
-    # if os.path.exists('zip/9/window_mid.obj'):
-    #     if obj_objects_counter('zip/9/window_mid.obj') == 1:
-    #         score += obj('zip/9/window_mid.obj', 200)
-    #         # Проверка текстуры
-    #         # 1
-    #         if texture_exist(folder_num["folder_num9"], object_name["object_name9"],
-    #                          texture_quantity["texture_quantity9"]):
-    #             score += get_texture_points(folder_num["folder_num9"],
-    #                                         object_name["object_name9"],
-    #                                         texture_quantity["texture_quantity9"])
-    # print(score)
-    #
-    # if os.path.exists('zip/10/window_lux.obj'):
-    #     if obj_objects_counter('zip/10/window_lux.obj') == 1:
-    #         score += obj('zip/10/window_lux.obj', 300)
-    #         # Проверка текстуры
-    #         # 1
-    #         if texture_exist(folder_num["folder_num10"], object_name["object_name10"],
-    #                          texture_quantity["texture_quantity10"]):
-    #             score += get_texture_points(folder_num["folder_num10"],
-    #                                         object_name["object_name10"],
-    #                                         texture_quantity["texture_quantity10"])
 
 # print(textureMainCheck('zip/1/wall_simple_tex2.png'))
 

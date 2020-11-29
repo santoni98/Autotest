@@ -41,6 +41,3 @@ def obj_scale(args):
         scale = z_max - z_min
 
     return scale
-    # print(str(x_min) + "   " + str(x_max))
-    # print(str(y_min) + "   " + str(y_max))
-    # print(str(z_min) + "   " + str(z_max))
