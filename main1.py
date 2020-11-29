@@ -4,6 +4,7 @@ import zipfile
 import json
 from objObjectsCounter import obj_objects_counter
 from objTriangleCount import obj_triangle_count
+from textureDifference import texture_difference
 from textureFill import texture_fill
 from textureMainCheck import texture_main_check
 from textureSolidColor import texture_solid_color
@@ -16,7 +17,7 @@ def obj(arg1, arg2):
     points = 0
     if obj_objects_counter(arg1) == 1:
         if temp >= constant_tris1 * 0.1:
-            if temp < constant_tris1 * 1.75:
+            if temp < constant_tris1 * 2.5:
                 points += 1
                 if temp > constant_tris1:
                     points += 1
@@ -32,6 +33,25 @@ def texture_exist(folder_num, object_name, texture_quantity):
         if not os.path.exists(path):
             e = False
     return e
+
+
+# ************Допиши эту штуку************
+def textures_valid(folder_num, object_name, texture_quantity):
+    path1 = str('zip/' + str(folder_num) + '/' + object_name + '_tex1.png')
+    path2 = str('zip/' + str(folder_num) + '/' + object_name + '_tex2.png')
+    path3 = str('zip/' + str(folder_num) + '/' + object_name + '_tex3.png')
+
+    print(path1)
+    print(path2)
+    print(path3)
+
+    check = True
+    if texture_quantity > 1:
+        check = texture_difference(path1, path2)
+        if texture_quantity < 4:
+            if check:
+                check = texture_difference(path1, path3) and texture_difference(path2, path3)
+    return check
 
 
 # Получить баллы за все текстуры в папке Unit 1
@@ -60,9 +80,9 @@ def points_texture_count(arg):
 def main():
     # get zip archive
     # обернуть в try except(ошибка при выдаче левого файла как zip)
-    # if os.path.exists('models.zip'):
-    #     with zipfile.ZipFile("models.zip", "r") as zip_ref:
-    #         zip_ref.extractall("zip")
+    if os.path.exists('models.zip'):
+        with zipfile.ZipFile("models.zip", "r") as zip_ref:
+            zip_ref.extractall("zip")
 
     with open("unit1.json", "r") as myfile:
         data = json.load(myfile)
@@ -81,7 +101,8 @@ def main():
         if texture_exist(num, obj_name, texture_quantity):
             score += get_texture_points(num, obj_name, texture_quantity)
 
-    #shutil.rmtree("zip")
+    # shutil.rmtree("zip")
+    # Вывод Баллов (Unit 1)
     if score < 0:
         score = 0
     if score > 40:
