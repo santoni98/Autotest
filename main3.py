@@ -1,5 +1,6 @@
 import json
 import os
+import shutil
 import zipfile
 from objObjectsCounter import obj_objects_counter
 from objTriangleCount import obj_triangle_count
@@ -36,7 +37,7 @@ def big_objects_counter(name, num1, num2, num3, num4):
 def main3():
     # get zip archive
     # обернуть в try except(ошибка при выдаче левого файла как zip)
-    if os.path.exists('models.zip'):
+    if os.path.exists('builds.zip'):
         with zipfile.ZipFile("builds.zip", "r") as zip_ref:
             zip_ref.extractall("zip3")
 
@@ -59,18 +60,18 @@ def main3():
         model_path = f'{dir_path}/{obj_name}.obj'
         if not os.path.exists(model_path):
             continue
-        if num < 3:
+        if num < 4:
             score += big_triangle_count(model_path, tris_checkpoint1, tris_checkpoint2, tris_checkpoint3, tris_checkpoint4)
             score += big_objects_counter(model_path, obj_checkpoint1, obj_checkpoint2, obj_checkpoint3, obj_checkpoint4)
         if num == 4:
-            unique_triangle_count(model_path, tris_checkpoint2, tris_checkpoint3)
+            score += unique_triangle_count(model_path, tris_checkpoint2, tris_checkpoint3)
 
-    # shutil.rmtree("zip")
+    shutil.rmtree("zip3")
     # Вывод Баллов (Unit 1)
     if score < 0:
         score = 0
-    if score > 40:
-        score = 40
+    if score > 16:
+        score = 16
     score /= 100
     print(score)
 

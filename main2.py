@@ -1,5 +1,6 @@
 import json
 import os
+import shutil
 import zipfile
 
 from objObjectsCounter import obj_objects_counter
@@ -163,7 +164,7 @@ def main2():
                 if textures_valid2(dir_path, obj_name, texture_quantity):
                     score += get_texture_points2(num, obj_name, texture_quantity)
 
-    # shutil.rmtree("zip")
+    shutil.rmtree("zip2")
     # Вывод Баллов (Unit 2)
     if score < 0:
         score = 0
