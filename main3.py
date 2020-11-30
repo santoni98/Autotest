@@ -67,7 +67,7 @@ def main3():
         if num == 4:
             score += unique_triangle_count(model_path, tris_checkpoint2, tris_checkpoint3)
 
-    # shutil.rmtree("zip3")
+    shutil.rmtree(base_dir)
     # Вывод Баллов (Unit 1)
     score = max(0, score)
     score = min(score, 16)

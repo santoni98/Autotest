@@ -1,17 +1,18 @@
+import json
 import os
 import shutil
 import zipfile
-import json
 from typing import List, Dict, Any
+
 from objObjectsCounter import obj_objects_counter
 from objTriangleCount import obj_triangle_count
-from textureDifference import texture_difference
 from textureFill import texture_fill
 from textureMainCheck import texture_main_check
 from textureSolidColor import texture_solid_color
-
-
 # obj Unit 1
+from utils import textures_valid, texture_exist
+
+
 def obj(arg1, arg2):
     temp = obj_triangle_count(arg1)
     constant_tris1 = arg2
@@ -23,31 +24,6 @@ def obj(arg1, arg2):
                 if temp > constant_tris1:
                     points += 1
     return points
-
-
-# Проверка наличия всех текстур в папке. Unit 1
-def texture_exist(folder_num, object_name, texture_quantity):
-    e = True
-    for i in range(texture_quantity):
-        i += 1
-        path = str('zip1/' + str(folder_num) + '/' + object_name + '_tex' + str(i) + '.png')
-        if not os.path.exists(path):
-            e = False
-    return e
-
-
-# Проверка на схожесть текстур в папке
-def textures_valid(dir_path, object_name, texture_quantity):
-    path1 = str(dir_path + '/' + object_name + '_tex1.png')
-    path2 = str(dir_path + '/' + object_name + '_tex2.png')
-    path3 = str(dir_path + '/' + object_name + '_tex3.png')
-
-    check = True
-    if texture_quantity == 2:
-        check = texture_difference(path1, path2)
-    if texture_quantity == 3:
-        check = texture_difference(path1, path3) and texture_difference(path2, path3)
-    return check
 
 
 # Получить баллы за все текстуры в папке Unit 1
@@ -95,11 +71,11 @@ def main():
         if not os.path.exists(model_path):
             continue
         score += obj(model_path, triangles)
-        if texture_exist(num, obj_name, texture_quantity):
+        if texture_exist(num, obj_name, texture_quantity, base_dir):
             if textures_valid(dir_path, obj_name, texture_quantity):
                 score += get_texture_points(num, obj_name, texture_quantity)
 
-    shutil.rmtree("zip1")
+    shutil.rmtree(base_dir)
     # Вывод Баллов (Unit 1)
     score = max(0, score)
     score = min(score, 40)
