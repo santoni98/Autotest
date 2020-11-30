@@ -1,0 +1,50 @@
+[
+  {
+    "num": 1,
+    "obj_name": "build_simple",
+    "tris_checkpoint1": 4000,
+    "tris_checkpoint2": 10000,
+    "tris_checkpoint3": 13000,
+    "tris_checkpoint4": 20000,
+    "obj_checkpoint1": 120,
+    "obj_checkpoint2": 180,
+    "obj_checkpoint3": 240,
+    "obj_checkpoint4": 300
+  },
+  {
+    "num": 2,
+    "obj_name": "build_mid",
+    "tris_checkpoint1": 1000,
+    "tris_checkpoint2": 20000,
+    "tris_checkpoint3": 30000,
+    "tris_checkpoint4": 70000,
+    "obj_checkpoint1": 200,
+    "obj_checkpoint2": 400,
+    "obj_checkpoint3": 800,
+    "obj_checkpoint4": 1200
+  },
+  {
+    "num": 3,
+    "obj_name": "build_lux",
+    "tris_checkpoint1": 15000,
+    "tris_checkpoint2": 55000,
+    "tris_checkpoint3": 120000,
+    "tris_checkpoint4": 250000,
+    "obj_checkpoint1": 250,
+    "obj_checkpoint2": 500,
+    "obj_checkpoint3": 1500,
+    "obj_checkpoint4": 2500
+  },
+  {
+    "num": 4,
+    "obj_name": "build_unique",
+    "tris_checkpoint1": 0,
+    "tris_checkpoint2": 200,
+    "tris_checkpoint3": 10000,
+    "tris_checkpoint4": 0,
+    "obj_checkpoint1": 0,
+    "obj_checkpoint2": 0,
+    "obj_checkpoint3": 0,
+    "obj_checkpoint4": 0
+  }
+]
