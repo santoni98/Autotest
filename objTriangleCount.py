@@ -9,6 +9,6 @@ def obj_triangle_count(args):
         if not len(split):
             continue
         if split[0] == "f":
-            triangles += len(split[1:])
+            triangles += len(split[1:]) - 2
 
     return triangles

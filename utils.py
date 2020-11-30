@@ -37,7 +37,7 @@ def get_texture_points(base_dir, folder_num, object_name, texture_quantity, grad
         i += 1
         path = str(f'{base_dir}/{folder_num}/{object_name}_tex{i}.png')
         grader_res = grader(path)
-        temp = max(temp, grader_res)
+        temp = min(temp, grader_res)
     temp *= texture_quantity
     return temp
 

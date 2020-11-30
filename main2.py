@@ -34,7 +34,7 @@ def separate_scale2_1(name):
     points = 0
     if obj_objects_counter(name) == 1:
         if obj_scale(name) >= 4.9:
-            if obj_scale(name) >= 5.1:
+            if obj_scale(name) <= 5.1:
                 points += 1
     return points
 
@@ -113,10 +113,8 @@ def main2():
 
     # shutil.rmtree("zip")
     # Вывод Баллов (Unit 2)
-    if score < 0:
-        score = 0
-    if score > 44:
-        score = 44
+    score = max(0, score)
+    score = min(score, 44)
     score /= 100
     print(score)
 
