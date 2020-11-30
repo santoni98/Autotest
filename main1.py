@@ -2,6 +2,7 @@ import os
 import shutil
 import zipfile
 import json
+from typing import List, Dict, Any
 from objObjectsCounter import obj_objects_counter
 from objTriangleCount import obj_triangle_count
 from textureDifference import texture_difference
@@ -74,18 +75,19 @@ def points_texture_count(arg):
 
 def main():
     # get zip archive
+    base_dir = 'zip1'
     # обернуть в try except(ошибка при выдаче левого файла как zip)
     if os.path.exists('models.zip'):
         with zipfile.ZipFile("models.zip", "r") as zip_ref:
-            zip_ref.extractall("zip1")
+            zip_ref.extractall(base_dir)
 
     with open("unit1.json", "r") as myfile:
-        data = json.load(myfile)
+        data: List[Dict[str, Any]] = json.load(myfile)
 
     score = 0
     for line in data:
         num = line["num"]
-        dir_path = f'zip1/{line["num"]}'
+        dir_path = f'{base_dir}/{num}'
         obj_name = line["obj_name"]
         texture_quantity = line["texture_quantity"]
         triangles = line["triangles"]
@@ -99,10 +101,8 @@ def main():
 
     shutil.rmtree("zip1")
     # Вывод Баллов (Unit 1)
-    if score < 0:
-        score = 0
-    if score > 40:
-        score = 40
+    score = max(0, score)
+    score = min(score, 40)
     score /= 100
     print(score)
 

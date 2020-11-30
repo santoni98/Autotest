@@ -36,10 +36,11 @@ def big_objects_counter(name, num1, num2, num3, num4):
 
 def main3():
     # get zip archive
+    base_dir = 'zip3'
     # обернуть в try except(ошибка при выдаче левого файла как zip)
     if os.path.exists('builds.zip'):
         with zipfile.ZipFile("builds.zip", "r") as zip_ref:
-            zip_ref.extractall("zip3")
+            zip_ref.extractall(base_dir)
 
     with open("unit3.json", "r") as myfile:
         data = json.load(myfile)
@@ -47,7 +48,7 @@ def main3():
     score = 0
     for line in data:
         num = line["num"]
-        dir_path = f'zip3/{line["num"]}'
+        dir_path = f'{base_dir}/{num}'
         obj_name = line["obj_name"]
         tris_checkpoint1 = line["tris_checkpoint1"]
         tris_checkpoint2 = line["tris_checkpoint2"]
@@ -66,12 +67,10 @@ def main3():
         if num == 4:
             score += unique_triangle_count(model_path, tris_checkpoint2, tris_checkpoint3)
 
-    shutil.rmtree("zip3")
+    # shutil.rmtree("zip3")
     # Вывод Баллов (Unit 1)
-    if score < 0:
-        score = 0
-    if score > 16:
-        score = 16
+    score = max(0, score)
+    score = min(score, 16)
     score /= 100
     print(score)
 

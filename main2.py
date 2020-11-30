@@ -13,11 +13,11 @@ from textureSolidColor import texture_solid_color
 
 
 # Баллы за идентичную длину дорог в 1,2,3 папках
-def length_roads_equally2_1():
+def length_roads_equally2_1(base_dir):
     points = 0
     # обернуть в try exception
-    if obj_scale("zip2/1/road1.obj") == obj_scale("zip2/2/road2.obj"):
-        if obj_scale("zip2/1/road1.obj") == obj_scale("zip2/3/road3.obj"):
+    if obj_scale(f"{base_dir}/1/road1.obj") == obj_scale(f"{base_dir}/2/road2.obj"):
+        if obj_scale(f"{base_dir}/1/road1.obj") == obj_scale(f"{base_dir}/3/road3.obj"):
             points += 3
     return points
 
@@ -43,22 +43,22 @@ def separate_scale2_1(name):
 
 
 # Проверка наличия всех текстур в папке. Unit 2
-def texture_exist(folder_num, object_name, texture_quantity):
+def texture_exist(folder_num, object_name, texture_quantity, base_dir):
     e = True
     for i in range(texture_quantity):
         i += 1
-        path = str('zip2/' + str(folder_num) + '/' + object_name + '_tex' + str(i) + '.png')
+        path = str(f'{base_dir}/' + str(folder_num) + '/' + object_name + '_tex' + str(i) + '.png')
         if not os.path.exists(path):
             e = False
     return e
 
 
 # Получить баллы за все текстуры в папке Unit 2_1
-def get_texture_points2_1(folder_num, object_name, texture_quantity):
+def get_texture_points2_1(folder_num, object_name, texture_quantity, base_dir):
     temp = 10
     for i in range(texture_quantity):
         i += 1
-        path = str('zip2/' + str(folder_num) + '/' + object_name + '_tex' + str(i) + '.png')
+        path = str(f'{base_dir}/' + str(folder_num) + '/' + object_name + '_tex' + str(i) + '.png')
         if temp > points_texture_count2_1(path):
             temp = points_texture_count2_1(path)
     return temp
@@ -89,11 +89,11 @@ def obj2(arg1, arg2):
 
 
 # Получить баллы за все текстуры в папке Unit 2
-def get_texture_points2(folder_num, object_name, texture_quantity):
+def get_texture_points2(folder_num, object_name, texture_quantity, base_dir):
     temp = 10
     for i in range(texture_quantity):
         i += 1
-        path = str('zip/' + str(folder_num) + '/' + object_name + '_tex' + str(i) + '.png')
+        path = str(f'{base_dir}/' + str(folder_num) + '/' + object_name + '_tex' + str(i) + '.png')
         if temp > points_texture_count2(path):
             temp = points_texture_count2(path)
     temp *= texture_quantity
@@ -128,10 +128,11 @@ def textures_valid2(dir_path, object_name, texture_quantity):
 
 def main2():
     # get zip archive
+    base_dir = 'zip2'
     # обернуть в try except(ошибка при выдаче левого файла как zip)
     if os.path.exists('roads.zip'):
         with zipfile.ZipFile("roads.zip", "r") as zip_ref:
-            zip_ref.extractall("zip2")
+            zip_ref.extractall(base_dir)
 
     with open("unit2.json", "r") as myfile:
         data = json.load(myfile)
@@ -140,7 +141,7 @@ def main2():
     helper_for_lengths = 0
     for line in data:
         num = line["num"]
-        dir_path = f'zip2/{line["num"]}'
+        dir_path = f'{base_dir}/{num}'
         obj_name = line["obj_name"]
         texture_quantity = line["texture_quantity"]
         triangles = line["triangles"]
@@ -152,24 +153,22 @@ def main2():
         if 1 <= num <= 3:
             helper_for_lengths += 3
             score += obj2_1(model_path, triangles)
-            if texture_exist(num, obj_name, texture_quantity):
+            if texture_exist(num, obj_name, texture_quantity, base_dir):
                 if textures_valid2(dir_path, obj_name, texture_quantity):
                     score += get_texture_points2_1(num, obj_name, texture_quantity)
         if helper_for_lengths == 3:
-            score += length_roads_equally2_1()
+            score += length_roads_equally2_1(base_dir)
 
         if num > 3:
             score += obj2(model_path, triangles)
-            if texture_exist(num, obj_name, texture_quantity):
+            if texture_exist(num, obj_name, texture_quantity, base_dir):
                 if textures_valid2(dir_path, obj_name, texture_quantity):
                     score += get_texture_points2(num, obj_name, texture_quantity)
 
     shutil.rmtree("zip2")
     # Вывод Баллов (Unit 2)
-    if score < 0:
-        score = 0
-    if score > 44:
-        score = 44
+    score = max(0, score)
+    score = min(score, 44)
     score /= 100
     print(score)
 
