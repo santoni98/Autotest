@@ -1,8 +1,8 @@
 import json
 import os
 import shutil
-import math
 import zipfile
+
 from objObjectsCounter import obj_objects_counter
 from objTriangleCount import obj_triangle_count
 
@@ -74,10 +74,8 @@ def grade_3(zip_path):
     # Вывод Баллов (Unit 1)
     score = max(0, score)
     score = min(score, 16)
-    score = math.floor(score / 16 * 100)  # колибровка баллов
-    score /= 100
-    print(score)
+    return score / 16
 
 
 if __name__ == '__main__':
-    grade_3("builds.zip")
+    print(grade_3("builds.zip"))

@@ -3,10 +3,10 @@ import os
 from textureDifference import texture_difference
 
 
-def textures_valid(dir_path, object_name, texture_quantity):
-    path1 = str(dir_path + '/' + object_name + '_tex1.png')
-    path2 = str(dir_path + '/' + object_name + '_tex2.png')
-    path3 = str(dir_path + '/' + object_name + '_tex3.png')
+def textures_valid(dir_path: str, object_name: str, texture_quantity: int):
+    path1 = f'{dir_path}/{object_name}_tex1.png'
+    path2 = f'{dir_path}/{object_name}_tex2.png'
+    path3 = f'{dir_path}/{object_name}_tex3.png'
 
     check = True
     if texture_quantity == 2:
@@ -20,7 +20,7 @@ def texture_exist(folder_num, object_name, texture_quantity, base_dir):
     e = True
     for i in range(texture_quantity):
         i += 1
-        path = str(f'{base_dir}/' + str(folder_num) + '/' + object_name + '_tex' + str(i) + '.png')
+        path = f'{base_dir}/{folder_num}/{object_name}_tex{i}.png'
         if not os.path.exists(path):
             e = False
     return e

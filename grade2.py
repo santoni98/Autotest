@@ -1,8 +1,8 @@
 import json
+import math
 import os
 import shutil
 import zipfile
-import math
 
 from objObjectsCounter import obj_objects_counter
 from objScale import obj_scale
@@ -83,7 +83,7 @@ def get_texture_points2(folder_num, object_name, texture_quantity, base_dir):
     temp = 10
     for i in range(texture_quantity):
         i += 1
-        path = str(f'{base_dir}/' + str(folder_num) + '/' + object_name + '_tex' + str(i) + '.png')
+        path = f'{base_dir}/{folder_num}/{object_name}_tex{i}.png'
         if temp > points_texture_count2(path):
             temp = points_texture_count2(path)
     temp *= texture_quantity
@@ -146,10 +146,8 @@ def grade_2(zip_path):
     # Вывод Баллов (Unit 2)
     score = max(0, score)
     score = min(score, 44)
-    score = math.floor(score / 44 * 100)  # колибровка баллов
-    score /= 100
-    print(score)
+    return score / 44
 
 
 if __name__ == '__main__':
-    grade_2("roads.zip")
+    print(grade_2("roads.zip"))

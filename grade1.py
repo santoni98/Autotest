@@ -2,8 +2,8 @@ import json
 import os
 import shutil
 import zipfile
-import math
 from typing import List, Dict, Any
+
 from objObjectsCounter import obj_objects_counter
 from objTriangleCount import obj_triangle_count
 from textureFill import texture_fill
@@ -27,13 +27,12 @@ def obj(arg1, arg2):
 
 
 # Получить баллы за все текстуры в папке Unit 1
-def get_texture_points(folder_num, object_name, texture_quantity):
+def get_texture_points(folder_num: int, object_name: str, texture_quantity: int, base_dir: str):
     temp = 10
     for i in range(texture_quantity):
         i += 1
-        path = str('zip1/' + str(folder_num) + '/' + object_name + '_tex' + str(i) + '.png')
-        if temp > points_texture_count(path):
-            temp = points_texture_count(path)
+        path = f'{base_dir}/{folder_num}/{object_name}_tex{i}.png'
+        temp = min(points_texture_count(path), temp)
     temp *= texture_quantity
     return temp
 
@@ -58,8 +57,8 @@ def grade_1(zip_path):
             with zipfile.ZipFile(zip_path, "r") as zip_ref:
                 zip_ref.extractall(base_dir)
 
-    with open("unit1.json", "r") as myfile:
-        data: List[Dict[str, Any]] = json.load(myfile)
+    with open("unit1.json", "r") as file:
+        data: List[Dict[str, Any]] = json.load(file)
 
     score = 0
     for line in data:
@@ -74,16 +73,14 @@ def grade_1(zip_path):
         score += obj(model_path, triangles)
         if texture_exist(num, obj_name, texture_quantity, base_dir):
             if textures_valid(dir_path, obj_name, texture_quantity):
-                score += get_texture_points(num, obj_name, texture_quantity)
+                score += get_texture_points(num, obj_name, texture_quantity, base_dir)
 
     shutil.rmtree(base_dir)
-    # Вывод Баллов (Unit 1)
+
     score = max(0, score)
     score = min(score, 40)
-    score = math.floor(score / 40 * 100)  # колибровка баллов
-    score /= 100
-    print(score)
+    return score / 40
 
 
 if __name__ == '__main__':
-    grade_1("models.zip")
+    print(grade_1("models.zip"))
